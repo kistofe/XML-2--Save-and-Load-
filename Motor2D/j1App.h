@@ -74,6 +74,11 @@ private:
 	const void RealSave();
 
 	void RealLoad();
+
+	//Load XML file 
+	bool LoadSaveFile();
+
+	bool SaveState();
 	
 
 public:
@@ -92,8 +97,10 @@ private:
 	uint				frames;
 	float				dt;
 	pugi::xml_document	config_file;
+	pugi::xml_document	save_file;
 	pugi::xml_node		config;
 	pugi::xml_node		app_config;
+	pugi::xml_node		save;
 	int					argc;
 	char**				args;
 	bool				needs_save;

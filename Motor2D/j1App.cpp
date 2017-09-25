@@ -63,11 +63,11 @@ void j1App::AddModule(j1Module* module)
 bool j1App::Awake()
 {
 	bool ret = LoadConfig();
-
+	
 	// self-config
 	title.create(app_config.child("title").child_value());
 	organization.create(app_config.child("organization").child_value());
-
+	
 	if(ret == true)
 	{
 		p2List_item<j1Module*>* item;
@@ -79,7 +79,7 @@ bool j1App::Awake()
 			item = item->next;
 		}
 	}
-
+	
 	return ret;
 }
 
@@ -130,7 +130,7 @@ bool j1App::LoadConfig()
 	bool ret = true;
 
 	pugi::xml_parse_result result = config_file.load_file("config.xml");
-
+	
 	if(result == NULL)
 	{
 		LOG("Could not load map xml file config.xml. pugi error: %s", result.description());
@@ -160,9 +160,17 @@ const void j1App::RealSave()
 
 }
 
+//Calls to load each module
 void j1App::RealLoad()
 {
+	p2List_item<j1Module*>* item;
+	item = modules.start;
 
+	while (item != NULL)
+	{
+		item->data->RealLoad(save.child(item->data->name.GetString()));
+		item = item->next;
+	}
 }
 // ---------------------------------------------
 void j1App::PrepareUpdate()
@@ -172,9 +180,9 @@ void j1App::PrepareUpdate()
 // ---------------------------------------------
 void j1App::FinishUpdate()
 {
-	if (needs_save) { App->RealSave(); }
+	App->RealSave(); 
 	
-	if (needs_load) { App->RealLoad(); }
+	App->RealLoad();
 	// TODO 1: This is a good place to call load / Save functions
 
 }
@@ -293,8 +301,32 @@ const char* j1App::GetOrganization() const
 
 // TODO 3: Create a simulation of the xml file to read 
 
+//method to load the xml file
+bool j1App::LoadSaveFile()
+{
+	bool ret = true;
+
+	pugi::xml_parse_result result = save_file.load_file("savegame.xml");
+
+	if (result == NULL)
+	{
+		LOG("Could not load map xml file savegame.xml. pugi error: %s", result.description());
+		ret = false;
+	}
+
+	else
+	{
+		save = save_file.child("save");
+	}
+	
+	return ret;
+}
 // TODO 4: Create a method to actually load an xml file
 // then call all the modules to load themselves
 
+bool j1App::SaveState()
+{
+
+}
 // TODO 7: Create a method to save the current state
 

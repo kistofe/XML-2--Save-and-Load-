@@ -87,6 +87,11 @@ bool j1Render::CleanUp()
 	return true;
 }
 
+void j1Render::RealLoad(pugi::xml_node& state)
+{
+	state.child("camera").attribute("x").as_int();
+	state.child("camera").attribute("y").as_int();
+}
 // TODO 6: Create a method to load the state
 // for now it will be camera's x and y
 

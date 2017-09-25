@@ -64,7 +64,7 @@ public:
 
 	}
 
-	virtual void RealLoad()
+	virtual void RealLoad(pugi::xml_node&)
 	{
 
 	}
